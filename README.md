@@ -4,7 +4,7 @@
 
 ## Generated code
 
-[`Buf`](https://github.com/bufbuild/buf) is used to manage protobuf dependencies as well as code generation. In lieu of [Buf Remote Packages](https://buf.build/docs/how-to/use-remote-packages), the code is generated with custom options and committed to `genproto`, with a Go module located at `genproto/go/do.mod`.
+[`Buf`](https://github.com/bufbuild/buf) is used to manage protobuf dependencies as well as code generation. In lieu of [Buf Remote Packages](https://buf.build/docs/how-to/use-remote-packages), the code is generated with custom options and committed to `genproto`, with a Go module located at `genproto/go/go.mod`.
 
 ---
 
