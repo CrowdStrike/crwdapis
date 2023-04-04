@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package crwd.api.v1;
+
+import "google/protobuf/descriptor.proto";	
+
+option go_package = "github.com/CrowdStrike/crwdapis/genproto/go/api/auth/v1;authv1";
+
+// Auth expresses authorization policies for an RPC.
+message Auth {
+  oneof policy {
+    Permission permission = 1;
+    Permissions permissions = 2;
+    PermissionExpression expression = 3;
+  }
+}
+
+// Permission is the building block for expressing authorization.
+//
+// Example:
+// rpc CreateFoo(CreateFooRequest) returns (CreateFooResponse) {
+// 	option (crwd.api.v1.auth) = {
+// 		permission: {
+// 			predicate: "create"
+// 			resource: "foo"
+// 		}
+// 	};
+// };
+message Permission {
+  // The object, predicate, and subject fields are the types that are being
+  // permission checked. For example, can a user subject read a book object?
+  string object = 1;
+  optional string predicate = 2;
+  optional string subject = 3;
+}
+
+// Permissions are a set of permissions that must all be satisfied.
+//
+// Example:
+// rpc CreateFooBar(CreateFooBarRequest) returns (CreateFooBarResponse) {
+// 	option (crwd.api.v1.auth) = {
+// 		permissions: {
+// 			permissions: [ 
+// 				{
+// 					predicate: "create"
+// 					resource: "foo"
+// 				},
+// 				{
+// 					predicate: "create"
+// 					resource: "bar"
+// 				}
+// 			]
+// 		}
+// 	};
+// };
+message Permissions {
+  repeated Permission permissions = 1;
+}
+
+// PermissionExpression allows for boolean operations on policies.
+//
+// Example:
+// option (crwd.api.v1.auth) = {
+// 	permission_expression: {
+// 		policies: [
+// 			{
+// 				permission: {
+// 					predicate: "update"
+// 					resource: "foo"
+// 				}
+// 			},
+// 			{
+// 				permission: {
+// 					predicate: "delete"
+// 					resource: "foo"
+// 				},
+// 			}
+// 		]
+// 		op: OR
+// 	}
+// };
+message PermissionExpression {
+  repeated Auth policies = 1;
+  Operation op = 2;
+}
+
+// Operation defines allowed boolean operations.
+enum Operation {
+  OPERATION_UNSPECIFIED = 0;
+  OPERATION_AND = 1;
+  OPERATION_OR = 2;
+}
+
+extend google.protobuf.MethodOptions {
+  Auth auth = 1000;
+}
