@@ -10,7 +10,6 @@ option go_package = "github.com/CrowdStrike/crwdapis/genproto/go/api/auth/v1;aut
 message Auth {
   oneof policy {
     Permission permission = 1;
-    Permissions permissions = 2;
     PermissionExpression expression = 3;
   }
 }
@@ -32,29 +31,6 @@ message Permission {
   string object = 1;
   optional string predicate = 2;
   optional string subject = 3;
-}
-
-// Permissions are a set of permissions that must all be satisfied.
-//
-// Example:
-// rpc CreateFooBar(CreateFooBarRequest) returns (CreateFooBarResponse) {
-// 	option (crwd.api.v1.auth) = {
-// 		permissions: {
-// 			permissions: [ 
-// 				{
-// 					predicate: "create"
-// 					resource: "foo"
-// 				},
-// 				{
-// 					predicate: "create"
-// 					resource: "bar"
-// 				}
-// 			]
-// 		}
-// 	};
-// };
-message Permissions {
-  repeated Permission permissions = 1;
 }
 
 // PermissionExpression allows for boolean operations on policies.
